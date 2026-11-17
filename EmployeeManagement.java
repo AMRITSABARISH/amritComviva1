@@ -20,7 +20,9 @@ public class EmployeeManagement {
                 System.out.println("1. Add employee");
                 System.out.println("2. Display all employees");
                 System.out.println("3. Search employee by ID");
-                System.out.println("4. Exit");
+                System.out.println("4. Update employee details");
+                System.out.println("5. Delete employee");
+                System.out.println("6. Exit");
                 System.out.print("Choose an option: ");
 
                 String choice = scanner.nextLine().trim();
@@ -35,11 +37,17 @@ public class EmployeeManagement {
                         searchEmployee(scanner);
                         break;
                     case "4":
+                        updateEmployee(scanner);
+                        break;
+                    case "5":
+                        deleteEmployee(scanner);
+                        break;
+                    case "6":
                         running = false;
                         System.out.println("Goodbye!");
                         break;
                     default:
-                        System.out.println("Invalid option. Enter 1, 2, 3, or 4.");
+                        System.out.println("Invalid option. Enter a number from 1 to 6.");
                 }
             }
         }
@@ -87,6 +95,35 @@ public class EmployeeManagement {
         }
     }
 
+    private static void updateEmployee(Scanner scanner) {
+        int id = readInt(scanner, "Enter employee ID to update: ");
+        Employee employee = employees.get(id);
+        if (employee == null) {
+            System.out.println("No employee found with ID " + id + ".");
+            return;
+        }
+
+        System.out.println("Enter the employee's updated details:");
+        String name = readRequiredText(scanner, "Name: ");
+        String department = readRequiredText(scanner, "Department: ");
+        double salary = readNonNegativeDouble(scanner, "Salary: ");
+
+        employee.setName(name);
+        employee.setDepartment(department);
+        employee.setSalary(salary);
+        System.out.println("Employee details updated successfully.");
+    }
+
+    private static void deleteEmployee(Scanner scanner) {
+        int id = readInt(scanner, "Enter employee ID to delete: ");
+        Employee removed = employees.remove(id);
+        if (removed == null) {
+            System.out.println("No employee found with ID " + id + ".");
+        } else {
+            System.out.println("Employee " + removed.getName() + " (ID: " + id + ") deleted successfully.");
+        }
+    }
+
     private static int readInt(Scanner scanner, String prompt) {
         while (true) {
             System.out.print(prompt);
@@ -126,9 +163,9 @@ public class EmployeeManagement {
 
     private static final class Employee {
         private final int id;
-        private final String name;
-        private final String department;
-        private final double salary;
+        private String name;
+        private String department;
+        private double salary;
 
         private Employee(int id, String name, String department, double salary) {
             this.id = id;
@@ -151,6 +188,18 @@ public class EmployeeManagement {
 
         private double getSalary() {
             return salary;
+        }
+
+        private void setName(String name) {
+            this.name = name;
+        }
+
+        private void setDepartment(String department) {
+            this.department = department;
+        }
+
+        private void setSalary(double salary) {
+            this.salary = salary;
         }
 
         @Override
